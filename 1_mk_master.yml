@@ -1,0 +1,110 @@
+#!/bin/bash
+
+### Export Node Information
+### Please Modify IP
+
+export KUBERNETES_VER=v1.11.3
+export LOAD_BALANCER_DNS=cp.demo.com
+export LOAD_BALANCER_PORT=6443
+export CP1_HOSTNAME=cp1.demo.com
+export CP1_IP=192.168.13.61
+export CP2_HOSTNAME=cp2.demo.com
+export CP2_IP=192.168.13.62
+export CP3_HOSTNAME=cp3.demo.com
+export CP3_IP=192.168.13.63
+
+########
+
+## Master 1 yml
+echo "Create Master1.yml"
+cat <<EOF> ./kubeadm-config_master1.yaml 
+apiVersion: kubeadm.k8s.io/v1alpha2
+kind: MasterConfiguration
+kubernetesVersion: ${KUBERNETES_VER}
+apiServerCertSANs:
+- "${LOAD_BALANCER_DNS}"
+api:
+    controlPlaneEndpoint: "$LOAD_BALANCER_DNS:$LOAD_BALANCER_PORT"
+etcd:
+  local:
+    extraArgs:
+      listen-client-urls: "https://127.0.0.1:2379,https://${CP1_IP}:2379"
+      advertise-client-urls: "https://${CP1_IP}:2379"
+      listen-peer-urls: "https://${CP1_IP}:2380"
+      initial-advertise-peer-urls: "https://${CP1_IP}:2380"
+      initial-cluster: "${CP1_HOSTNAME}=https://${CP1_IP}:2380"
+    serverCertSANs:
+      - $CP1_HOSTNAME
+      - $CP1_IP
+    peerCertSANs:
+      - $CP1_HOSTNAME
+      - $CP1_IP
+networking:
+    # This CIDR is a Calico default. Substitute or remove for your CNI provider.
+    podSubnet: "10.244.0.0/16"
+EOF
+
+## Master 2 yml
+echo "Create Master2.yml"
+
+cat <<EOF> ./kubeadm-config_master2.yaml
+apiVersion: kubeadm.k8s.io/v1alpha2
+kind: MasterConfiguration
+kubernetesVersion: ${KUBERNETES_VER}
+apiServerCertSANs:
+- "${LOAD_BALANCER_DNS}"
+api:
+    controlPlaneEndpoint: "${LOAD_BALANCER_DNS}:${LOAD_BALANCER_PORT}"
+etcd:
+  local:
+    extraArgs:
+      listen-client-urls: "https://127.0.0.1:2379,https://${CP2_IP}:2379"
+      advertise-client-urls: "https://${CP2_IP}:2379"
+      listen-peer-urls: "https://${CP2_IP}:2380"
+      initial-advertise-peer-urls: "https://${CP2_IP}:2380"
+      initial-cluster: "${CP1_HOSTNAME}=https://${CP1_IP}:2380,${CP2_HOSTNAME}=https://${CP2_IP}:2380"
+      initial-cluster-state: existing
+    serverCertSANs:
+      - ${CP2_HOSTNAME}
+      - ${CP2_IP}
+    peerCertSANs:
+      - ${CP2_HOSTNAME}
+      - ${CP2_IP}
+networking:
+    # This CIDR is a calico default. Substitute or remove for your CNI provider.
+    podSubnet: "10.244.0.0/16"
+EOF
+
+## Master 3 yml
+echo "Create Master3.yml"
+
+cat <<EOF> ./kubeadm-config_master3.yaml
+apiVersion: kubeadm.k8s.io/v1alpha2
+kind: MasterConfiguration
+kubernetesVersion: ${KUBERNETES_VER}
+apiServerCertSANs:
+- "${LOAD_BALANCER_DNS}"
+api:
+    controlPlaneEndpoint: "${LOAD_BALANCER_DNS}:${LOAD_BALANCER_PORT}"
+etcd:
+  local:
+    extraArgs:
+      listen-client-urls: "https://127.0.0.1:2379,https://${CP3_IP}:2379"
+      advertise-client-urls: "https://${CP3_IP}:2379"
+      listen-peer-urls: "https://${CP3_IP}:2380"
+      initial-advertise-peer-urls: "https://${CP3_IP}:2380"
+      initial-cluster: "${CP1_HOSTNAME}=https://${CP1_IP}:2380,${CP2_HOSTNAME}=https://${CP2_IP}:2380,${CP3_HOSTNAME}=https://${CP3_IP}:2380"
+      initial-cluster-state: existing
+    serverCertSANs:
+      - ${CP3_HOSTNAME}
+      - ${CP3_IP}
+    peerCertSANs:
+      - ${CP3_HOSTNAME}
+      - ${CP3_IP}
+networking:
+    # This CIDR is a calico default. Substitute or remove for your CNI provider.
+    podSubnet: "10.244.0.0/16"
+EOF
+
+###
+echo "End Create yml"

@@ -1,0 +1,1 @@
+  kubeadm join cp.demo.com:6443 --token e5q9ip.aaotsonofshodvi3 --discovery-token-ca-cert-hash sha256:11af8dfb8d933c7b2cecf1e6f1d775183e60fa1545d75ab19e5afe33dd930d2d
