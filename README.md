@@ -1,7 +1,5 @@
-# k8x_Script
+# k8s-install-script
 
-- 참조
-* k8x docs 
-* blog
-
-- 저장용
+ - Update : 2018.11.15
+ - Version : v2
+ - Personal Install Script

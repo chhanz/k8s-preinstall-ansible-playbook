@@ -15,7 +15,8 @@ fi
 
 # update yum
 echo -e "${RED}UPDATE YUM${NC}"
-yum update -y
+echo -e "${RED}Manual -Change YUM UPDATE ${NC}"
+#yum update -y
 
 # Stop Firewalld
 echo -e "${RED}TURN OFF FIREWALLD${NC}"
@@ -52,7 +53,7 @@ https://download.docker.com/linux/centos/docker-ce.repo
 
 # Install Docker
 echo -e "${RED}INSTALL DOCKER${NC}"
-yum install -y docker-ce
+yum install -y docker-ce-18.06.1.ce
 
 # Start Docker
 echo -e "${RED}START DOCKER${NC}"
@@ -98,7 +99,9 @@ sysctl --system
 
 # Install Kubernetes
 echo -e "${RED}INSTALL KUBERNETES${NC}"
-yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+#yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+yum install -y kubelet-1.12.2-0 kubeadm-1.12.2-0 kubectl-1.12.2-0 --disableexcludes=kubernetes
+
 
 # Start kubelet
 echo -e "${RED}START KUBELET${NC}"

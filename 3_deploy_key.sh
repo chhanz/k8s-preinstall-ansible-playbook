@@ -5,7 +5,7 @@
 echo "Start Scp Key"
 echo > /tmp/keyscp.txt
 
-for host in 192.168.13.62 192.168.13.63; do
+for host in 192.168.13.22 192.168.13.23; do
 echo " 	ssh root@$host mkdir -p /etc/kubernetes/pki/etcd" >> /tmp/keyscp.txt
 echo "	scp /etc/kubernetes/pki/ca.crt root@$host:/etc/kubernetes/pki/"  >> /tmp/keyscp.txt
 echo " 	scp /etc/kubernetes/pki/ca.key root@$host:/etc/kubernetes/pki/"  >> /tmp/keyscp.txt
