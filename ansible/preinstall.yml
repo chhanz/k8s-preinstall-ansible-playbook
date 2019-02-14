@@ -1,0 +1,50 @@
+---
+- name: Install packages necessary for installer
+  hosts: node
+  any_errors_fatal: true
+  tasks:
+  - name: Remove chronyd package
+    package:
+      name: chrony
+      state: absent
+
+  - name: Install ntp package
+    package:
+      name: ntp
+      state: present
+    register: result
+    until: result is succeeded
+
+  - name: Start and enable ntpd/chronyd
+    command: timedatectl set-ntp true
+    register: result
+    until: result is succeeded
+
+  - name : Stop the firewalld
+    service:
+      name: firewalld
+      state: stopped
+      enabled: no
+
+  - name : Uninstall old version docker package
+    yum: 
+      name: docker*
+      state: absent
+
+  - name : Install Required Packages
+    yum: 
+      name: yum-utils,lvm2
+      state: present
+
+  - name : Enable docker-ce Repo
+    command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  
+  - name : Install docker-ce
+    yum:
+      name: "{{ docker_package_version }}"
+      state: present
+  - name : Start dockerd
+    service:
+      name: docker
+      state: started
+      enabled: yes
