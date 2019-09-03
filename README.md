@@ -1,6 +1,6 @@
 # k8s-install-script
 
-+ Kubernetes Preinstaller File list (v1.15.3)
++ File list (v1.15.3)
 ```console
 ├── README.md 
 ├── inventory
