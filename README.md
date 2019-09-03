@@ -26,9 +26,9 @@
 ### Change Inventory (3 node example)
 ```console
 [all]  
-fastvm-node1    ansible_host=192.168.0.1
-fastvm-node2    ansible_host=192.168.0.2
-fastvm-node3    ansible_host=192.168.0.3
+fastvm-centos-7-6-22    ansible_host=192.168.200.22
+fastvm-centos-7-6-23    ansible_host=192.168.200.23
+fastvm-centos-7-6-24    ansible_host=192.168.200.24
 
 [all:vars]
 ansible_ssh_user=root
@@ -124,6 +124,7 @@ $ kubeadm join 192.168.200.22:6443 --token cdw8cj.4guf1fr9e7shc7u8 \
 <center><img src="/assets/image4.png" style="max-width: 100%; height: auto;"></center>   
 
 ### Test Run APP
+* run deploy
 ```bash
 $ kubectl run test-httpd --image=httpd  
 deployment.apps/test-httpd created 
