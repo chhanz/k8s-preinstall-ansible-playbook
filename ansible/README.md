@@ -1,3 +1,0 @@
-# Convert Bash script to Ansible yaml
-
-Testing...
