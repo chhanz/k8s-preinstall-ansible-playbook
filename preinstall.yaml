@@ -1,9 +1,6 @@
 ---
 - name: Kubernetes Preinstaller
   hosts: all
-#  vars:
-#    docker_package_version: 'docker-ce-18.06.1.ce'
-#    kubernetes_package_version: '1.15.3-0'
   tasks:
 
 # Configuration Default Service 
@@ -45,6 +42,7 @@
       url: https://download.docker.com/linux/centos/docker-ce.repo 
       dest: /etc/yum.repos.d/
       mode: '0644'
+    when: install_package|bool
 
 
   - name: Add Kubernetes repository
@@ -53,6 +51,7 @@
       description: kubernetes
       baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
       gpgcheck: no
+    when: install_package|bool
 
 # Update system
   - name: upgrade all packages
@@ -73,6 +72,7 @@
     package: 
       name: "{{docker_package_version}}"
       state: present
+    when: install_package|bool
   - name: Install Kubernets Package(3/3)
     package: 
       name: 
@@ -80,7 +80,8 @@
         - kubelet-{{kubernetes_package_version}}
         - kubectl-{{kubernetes_package_version}}
       state: present
-        
+    when: install_package|bool
+       
 # Start Service 
   - name: Start 'chronyd' Service    
     service:
@@ -92,10 +93,11 @@
       name: docker
       enabled: yes
       state: started   
+    when: install_package|bool
   - name: Start 'kubelet' Service    
     service:
       name: kubelet
       enabled: yes
       daemon_reload: yes
       state: started
-
+    when: install_package|bool
