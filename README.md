@@ -33,9 +33,13 @@ fastvm-centos-7-6-24    ansible_host=192.168.200.24
 [all:vars]
 ansible_ssh_user=root
 ansible_ssh_pass=password
+
+## Please check variable
 docker_package_version=docker-ce-18.06.1.ce
 kubernetes_package_version=1.15.3-0
+install_package=true
 ```
+***Please check variable***
 
 ### Use 
 ```bash
